@@ -58,60 +58,33 @@ typeEffect();
 // COUNTER ANIMATION
 // ======================
 
-const counters = document.querySelectorAll(".counter");
+const counters = document.querySelectorAll('.counter');
 
 const startCounter = () => {
+  counters.forEach(counter => {
+    const target = +counter.getAttribute('data-target');
+    let count = 0;
 
-    counters.forEach(counter => {
+    const updateCounter = () => {
+      const increment = Math.ceil(target / 50);
 
-        const target = +counter.getAttribute("data-target");
+      if (count < target) {
+        count += increment;
 
-        let count = 0;
+        if (count > target) count = target;
 
-        const speed = target / 100;
+        counter.innerText = count;
+        setTimeout(updateCounter, 30);
+      } else {
+        counter.innerText = target;
+      }
+    };
 
-        const updateCounter = () => {
-
-            if (count < target) {
-
-                count += speed;
-
-                counter.innerText =
-                    Math.ceil(count);
-
-                requestAnimationFrame(updateCounter);
-
-            } else {
-
-                counter.innerText = target + "+";
-            }
-        };
-
-        updateCounter();
-
-    });
-
+    updateCounter();
+  });
 };
 
-const statsSection = document.querySelector(".stats");
-
-const observer = new IntersectionObserver(entries => {
-
-    entries.forEach(entry => {
-
-        if (entry.isIntersecting) {
-
-            startCounter();
-
-            observer.unobserve(entry.target);
-        }
-    });
-
-}, {
-    threshold: 0.5
-});
-
-observer.observe(statsSection);
+window.addEventListener('load', startCounter);
 
 
 // ======================
